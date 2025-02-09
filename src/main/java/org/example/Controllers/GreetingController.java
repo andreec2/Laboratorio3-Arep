@@ -1,4 +1,8 @@
-package org.example;
+package org.example.Controllers;
+
+import org.example.annotations.GetMapping;
+import org.example.annotations.RequestParam;
+import org.example.annotations.RestController;
 
 import java.util.concurrent.atomic.AtomicLong;
 

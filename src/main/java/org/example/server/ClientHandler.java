@@ -1,4 +1,7 @@
-package org.example;
+package org.example.server;
+
+import org.example.annotations.GetMapping;
+import org.example.annotations.RestController;
 
 import java.io.*;
 import java.net.Socket;
@@ -20,10 +23,13 @@ public class ClientHandler {
 
     // Método para inicializar las rutas anotadas
     public static void initializeRoutes() {
-        scanAndLoadComponents("org.example");
+
+        scanAndLoadComponents("org.example.annotastions");
+        scanAndLoadComponents("org.example.Controllers");
     }
 
     public static void scanAndLoadComponents(String basePackage) {
+
         try {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             String path = basePackage.replace('.', '/');
@@ -107,7 +113,7 @@ public class ClientHandler {
         }
     }
 
-    private void handleAnnotatedRoute(String path, String query, OutputStream out) {
+    private void handleAnnotatedRoute(String path, String query, OutputStream out) throws IOException {
         try {
             Method method = annotatedRoutes.get(path);
             String name = query != null && query.startsWith("name=") ?
@@ -127,11 +133,11 @@ public class ClientHandler {
             out.flush();
         } catch (Exception e) {
             e.printStackTrace();
-            sendError(out, 500, "Error interno del servidor");
+            sendError(null, out, 500, "Error interno del servidor");
         }
     }
 
-    private void serveStaticFile(String path, OutputStream out) {
+    private void serveStaticFile(String path, OutputStream out) throws IOException {
         try {
             // Eliminar el slash inicial para buscar en resources
             String resourcePath = path.startsWith("/") ? path.substring(1) : path;
@@ -139,7 +145,8 @@ public class ClientHandler {
 
             if (inputStream != null) {
                 byte[] fileBytes = inputStream.readAllBytes();
-                String contentType = getContentType(path);
+                String contentType = Files.probeContentType(Path.of(path));
+                //String contentType = getContentType(path);
 
                 String headers = "HTTP/1.1 200 OK\r\n" +
                         "Content-Type: " + contentType + "\r\n" +
@@ -150,30 +157,22 @@ public class ClientHandler {
                 out.write(fileBytes);
                 out.flush();
             } else {
-                sendError(out, 404, "Archivo no encontrado");
+                sendError(inputStream, out, 404, "Archivo no encontrado");
             }
         } catch (IOException e) {
-            sendError(out, 500, "Error interno del servidor");
+            sendError(null, out, 500, "Error interno del servidor");
         }
     }
 
-    private String getContentType(String path) {
-        if (path.endsWith(".html")) return "text/html";
-        if (path.endsWith(".css")) return "text/css";
-        if (path.endsWith(".js")) return "application/javascript";
-        if (path.endsWith(".png")) return "image/png";
-        if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
-        if (path.endsWith(".gif")) return "image/gif";
-        return "application/octet-stream";
-    }
-
-    private void sendError(OutputStream out, int code, String message) {
+    private void sendError(InputStream inputStream, OutputStream out, int code, String message) throws IOException {
+        inputStream = ClientHandler.class.getClassLoader().getResourceAsStream("public" + File.separator + "404RemFound.html");
+        byte[] fileBytes = inputStream.readAllBytes();
         try {
             String errorResponse = "HTTP/1.1 " + code + " " + message + "\r\n" +
                     "Content-Type: text/html\r\n" +
-                    "\r\n" +
-                    "<html><body><h1>" + code + " - " + message + "</h1></body></html>";
+                    "\r\n";
             out.write(errorResponse.getBytes(StandardCharsets.UTF_8));
+            out.write(fileBytes);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
