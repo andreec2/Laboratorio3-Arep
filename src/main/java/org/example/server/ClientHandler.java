@@ -1,6 +1,7 @@
 package org.example.server;
 
 import org.example.annotations.GetMapping;
+import org.example.annotations.RequestParam;
 import org.example.annotations.RestController;
 
 import java.io.*;
@@ -116,13 +117,41 @@ public class ClientHandler {
     private void handleAnnotatedRoute(String path, String query, OutputStream out) throws IOException {
         try {
             Method method = annotatedRoutes.get(path);
-            String name = query != null && query.startsWith("name=") ?
-                    java.net.URLDecoder.decode(query.substring(5), StandardCharsets.UTF_8) :
-                    "World";
 
-            String result = (String) method.invoke(null, name);
+            // Obtener los parámetros del método
+            java.lang.reflect.Parameter[] parameters = method.getParameters();
+            Object[] args = new Object[parameters.length];
+
+            // Parsear los parámetros de la query
+            Map<String, String> queryParams = parseQueryParams(query);
+
+            // Preparar los argumentos para cada parámetro
+            for (int i = 0; i < parameters.length; i++) {
+                java.lang.reflect.Parameter param = parameters[i];
+                RequestParam annotation = param.getAnnotation(  RequestParam.class);
+
+                if (annotation != null) {
+                    String paramName = annotation.value();
+                    String defaultValue = annotation.defaultValue();
+                    String value = queryParams.getOrDefault(paramName, defaultValue);
+                    args[i] = value;
+                } else {
+                    // Si no tiene anotación, usar null o un valor por defecto
+                    args[i] = null;
+                }
+            }
+
+            // Invocar el método con los argumentos preparados
+            Object result;
+            if (java.lang.reflect.Modifier.isStatic(method.getModifiers())) {
+                result = method.invoke(null, args);
+            } else {
+                // Si el método no es estático, crear una instancia de la clase
+                Object instance = method.getDeclaringClass().getDeclaredConstructor().newInstance();
+                result = method.invoke(instance, args);
+            }
+
             String responseBody = "{\"message\": \"" + result + "\"}";
-
             String response = "HTTP/1.1 200 OK\r\n" +
                     "Content-Type: application/json\r\n" +
                     "Content-Length: " + responseBody.getBytes(StandardCharsets.UTF_8).length + "\r\n" +
@@ -131,10 +160,30 @@ public class ClientHandler {
 
             out.write(response.getBytes(StandardCharsets.UTF_8));
             out.flush();
+
         } catch (Exception e) {
             e.printStackTrace();
             sendError(null, out, 500, "Error interno del servidor");
         }
+    }
+
+    private Map<String, String> parseQueryParams(String query) {
+        Map<String, String> params = new HashMap<>();
+        if (query == null || query.isEmpty()) {
+            return params;
+        }
+
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            String[] keyValue = pair.split("=");
+            if (keyValue.length == 2) {
+                String key = keyValue[0];
+                String value = "";
+                value = java.net.URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
+                params.put(key, value);
+            }
+        }
+        return params;
     }
 
     private void serveStaticFile(String path, OutputStream out) throws IOException {
