@@ -30,6 +30,33 @@ public class AndresController {
         }
     }
 
+    @GetMapping("/res")
+    public String res(@RequestParam(value = "a", defaultValue = "0") String aStr,
+                      @RequestParam(value = "b", defaultValue = "0") String bStr) {
+        try {
+            int a = Integer.parseInt(aStr);
+            int b = Integer.parseInt(bStr);
+            int result = a - b;
+            return Integer.toString(result);
+        } catch (NumberFormatException e) {
+            return "Entrada incorrecta. Por favor ingresa enteros";
+        }
+    }
+
+    @GetMapping("/mul")
+    public String mul(@RequestParam(value = "a", defaultValue = "0") String aStr,
+                      @RequestParam(value = "b", defaultValue = "0") String bStr) {
+        try {
+            int a = Integer.parseInt(aStr);
+            int b = Integer.parseInt(bStr);
+            int result = a * b;
+            return Integer.toString(result);
+        } catch (NumberFormatException e) {
+            return "Entrada incorrecta. Por favor ingresa enteros";
+        }
+    }
+
+
 
 
 }
