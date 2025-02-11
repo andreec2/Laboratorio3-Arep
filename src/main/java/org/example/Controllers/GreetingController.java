@@ -20,6 +20,4 @@ public class GreetingController {
         return Double.toString(Math.PI);
     }
 
-    @GetMapping("/pipe")
-    public static String pipe(String name) { return  name;}
 }
