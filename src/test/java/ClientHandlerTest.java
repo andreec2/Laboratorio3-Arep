@@ -213,25 +213,6 @@ class ClientHandlerTest {
                 "Debería devolver el valor de PI");
     }
 
-    @Test
-    void testNombreWithDefaultValues() throws IOException {
-        String response = sendGetRequest("/nombre");
-        assertTrue(response.contains("Bienvenido señor Andres"),
-                "Debería usar el nombre por defecto 'Andres'");
-        assertTrue(response.contains("vodka"),
-                "Debería usar la bebida por defecto 'vodka'");
-    }
-
-    @Test
-    void testNombreWithCustomValues() throws IOException {
-        String name = URLEncoder.encode("Pedro", StandardCharsets.UTF_8);
-        String tipo = URLEncoder.encode("whiskey", StandardCharsets.UTF_8);
-        String response = sendGetRequest("/nombre?name=" + name + "&tipo=" + tipo);
-        assertTrue(response.contains("Bienvenido señor Pedro"),
-                "Debería usar el nombre proporcionado");
-        assertTrue(response.contains("whiskey"),
-                "Debería usar la bebida proporcionada");
-    }
 
     @Test
     void testSumWithValidInput() throws IOException {

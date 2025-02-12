@@ -3,8 +3,5 @@ org\example\annotations\RequestParam.class
 org\example\server\ClientHandler.class
 org\example\server\HttpServer.class
 org\example\annotations\RestController.class
-org\example\Response.class
-org\example\Request.class
 org\example\Controllers\GreetingController.class
-org\example\MockResponse.class
 org\example\annotations\GetMapping.class
