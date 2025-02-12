@@ -1,9 +1,13 @@
 # TALLER MICROFRAMEWORKS WEB
 
 
-Este proyecto implementa un servidor web básico en Java que maneja solicitudes REST (GET, POST) y retorna los archivos solicitados que conforman la página web. El servidor está diseñado para manejar una conexión de cliente y realizar operaciones en objetos JSON y archivos HTML en memoria. Cada solicitud es manejada por ClientHandler. El tema escogido para la página web es de REM.
+Este proyecto implementa un servidor web minimalista en Java con soporte para el manejo de páginas HTML, imágenes PNG y solicitudes REST. Además, incorpora un framework IoC (Inversión de Control) que permite la construcción de aplicaciones web a partir de POJOs utilizando capacidades reflectivas de Java.
 
-Además, el proyecto ha evolucionado con el objetivo de convertirse en un marco web completamente funcional, permitiendo el desarrollo de aplicaciones web con servicios REST en el backend.
+El servidor está diseñado para atender múltiples solicitudes de forma no concurrente y permite la carga dinámica de clases anotadas con @RestController, publicando servicios en las URIs correspondientes definidas mediante @GetMapping. También soporta el uso de @RequestParam para recibir parámetros en las solicitudes.
+
+En su versión final, explorará el classpath en busca de clases con las anotaciones adecuadas y las cargará automáticamente.
+
+Para demostrar su funcionamiento, el proyecto incluye una aplicación web de ejemplo que responde a solicitudes REST y muestra contenido HTML relacionado con REM.
 
 ![{77378D07-17EE-46F6-9941-1207A993392A}](https://github.com/user-attachments/assets/0d10e85d-2502-4756-9b86-7f727cf55d42)
 
@@ -17,12 +21,16 @@ Este proyecto sigue la arquitectura cliente-servidor. Utilizando el estilo arqui
      ClientHandler: Gestiona la comunicación con el cliente, procesa la solicitud y decide si debe retornar un archivo estático o delegar la solicitud a un servicio REST.
 
    - **Servicios REST**: ClientHandler: Maneja operaciones CRUD en objetos JSON y consulta archivos HTML estáticos guardados en el servidor.
-Se implementaron dos clases nuevas:
-Request: Encapsula los datos de la solicitud del cliente, permitiendo acceder a parámetros y valores de consulta.
-Response: Maneja la respuesta que se enviará al cliente, incluyendo el código de estado y los datos devueltos.
-Estas clases permiten definir servicios REST de manera más flexible mediante funciones lambda.
-   - **Archivos estáticos**: Almacenados en el directorio public, accesibles mediante el servidor para servir contenido HTML, CSS, JS e imágenes.
 
+   - **Archivos estáticos**: Los archivos estáticos se almacenan en el directorio public, permitiendo que el servidor sirva contenido HTML, CSS, JS e imágenes de manera eficiente.
+
+   - **Anotaciones y Controladores**: Annotations: Se definen las anotaciones necesarias para identificar los componentes del framework. Estas incluyen:
+
+@RestController: Marca una clase como un controlador REST.
+@GetMapping: Especifica que un método maneja solicitudes GET a una URL determinada.
+@RequestParam: Permite la recepción de parámetros en los métodos manejadores.
+
+Controllers: Consumen las anotaciones definidas y procesan las solicitudes REST.
 
 ## Primeros Pasos
 Estas instrucciones le permitirán obtener una copia del proyecto en funcionamiento en su máquina local para fines de desarrollo y prueba. 
@@ -43,7 +51,7 @@ Para ejecutar este proyecto, necesitarás tener instalado:
 3. abrir la terminal de GIT --> mediante el clik derecho seleccionas Git bash here
 4. Clona el repositorio en tu máquina local:
    ```bash
-   git clone https://github.com/andreec2/Laboratorio2-Arep.git
+   git https://github.com/andreec2/Laboratorio3-Arep.git
    ```
 5. Abre el proyecto con tu IDE favorito o navega hasta el directorio del proyecto 
 6. Desde la terminal  para compilar el proyecto ejecuta:
@@ -56,7 +64,11 @@ Para ejecutar este proyecto, necesitarás tener instalado:
    ```bash
     mvn clean package
    ```
-8. Corra el servidor en la clase httpServer "main"
+8. Corra el servidor en la clase httpServer "main" o ejecute el siguiente comando desde consola
+   
+      ```bash
+    java -cp target/classes org.example.server.HttpServer
+   ```
    Vera que el servidor esta listo y corriendo sobre el puerto 35000
    
 9. Puedes Ingresar desde el navegador a la pagina:
@@ -65,27 +77,9 @@ Para ejecutar este proyecto, necesitarás tener instalado:
 10. Puedes interactuar con los endpoints RESTful (/api):
    - POST= http://localhost:35000/post.html
 
-11. Para este taller, además de los recursos estáticos ya implementados, hemos definido nuevos endpoints utilizando funciones lambda, lo que mejora la flexibilidad y capacidad de nuestro servidor web.
+11. Para este taller, además de los recursos estáticos ya implementados, hemos definido nuevos endpoints aprovechando las capacidades reflexivas de Java. Para ello, hemos creado anotaciones como @GetMapping y @RequestParam, lo que permite manejar solicitudes de manera más flexible y estructurada.
 
-   - http://localhost:35000/app/hello?name=Andres
-
-     ![image](https://github.com/user-attachments/assets/157e7314-4da7-43c8-b96f-3dc1efa6dbaf)
-
-   - http://localhost:35000/app/hello?name=Andres
-
-   ![image](https://github.com/user-attachments/assets/b92ddfa0-cbb7-4611-87f5-30b4f9665bf2)
-
-   - http://localhost:35000/app/helloWord
-
-   ![image](https://github.com/user-attachments/assets/ff58dcad-ef25-4758-bae5-79c714e9406d)
-
-   - http://localhost:35000/app/pi
-
-   ![image](https://github.com/user-attachments/assets/43e4b2cf-20e9-4c2a-b95a-790e9ff43d94)
-
-   - Funciones lambda
-
-     ![image](https://github.com/user-attachments/assets/ac327b5b-85d3-4a90-84b4-841ce691bf11)
+### mas tardecito sigo xd
 
 ## Ejecutar las pruebas
 
