@@ -72,6 +72,7 @@ Para ejecutar este proyecto, necesitarás tener instalado:
    Vera que el servidor esta listo y corriendo sobre el puerto 35000
    
 9. Puedes Ingresar desde el navegador a la pagina:
+    
     http://localhost:35000/index.html
 
 10. Puedes interactuar con los endpoints RESTful (/api):
@@ -79,7 +80,31 @@ Para ejecutar este proyecto, necesitarás tener instalado:
 
 11. Para este taller, además de los recursos estáticos ya implementados, hemos definido nuevos endpoints aprovechando las capacidades reflexivas de Java. Para ello, hemos creado anotaciones como @GetMapping y @RequestParam, lo que permite manejar solicitudes de manera más flexible y estructurada.
 
-### mas tardecito sigo xd
+Los nuevos endPoints definidos son los siguientes:
+
+http://localhost:35000/nombre?name=andres
+
+![image](https://github.com/user-attachments/assets/b2770f13-9728-4218-874c-382dbd8c0f29)
+
+![image](https://github.com/user-attachments/assets/90de5267-dfe7-4bb1-b03f-307a4c452bf1)
+
+http://localhost:35000/sum?a=6&b=5
+
+![image](https://github.com/user-attachments/assets/f75b949a-0b74-4f3e-9d8d-728b0014b867)
+
+![image](https://github.com/user-attachments/assets/2e8fb19f-c2b8-473e-90b7-41ef9afbdc82)
+
+http://localhost:35000/res?a=6&b=5
+
+![image](https://github.com/user-attachments/assets/d6c91eca-bb6a-483b-a96c-633557affca1)
+
+![image](https://github.com/user-attachments/assets/39c49846-0f39-4dad-8a63-5df2868e2689)
+
+http://localhost:35000/mul?a=6&b=5
+
+![image](https://github.com/user-attachments/assets/b5d5ac39-7a0f-4f58-97b0-28bc29c7c3a1)
+
+![image](https://github.com/user-attachments/assets/9094870b-ea48-46bc-a4db-ef6dfb83feaa)
 
 ## Ejecutar las pruebas
 
