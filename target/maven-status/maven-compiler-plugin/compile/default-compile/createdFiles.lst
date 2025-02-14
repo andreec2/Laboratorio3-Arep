@@ -1,7 +1,0 @@
-org\example\Controllers\AndresController.class
-org\example\annotations\RequestParam.class
-org\example\server\ClientHandler.class
-org\example\server\HttpServer.class
-org\example\annotations\RestController.class
-org\example\Controllers\GreetingController.class
-org\example\annotations\GetMapping.class
